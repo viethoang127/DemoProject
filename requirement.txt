@@ -1,0 +1,9 @@
+requests
+beautifulsoup4
+sentence_transformers
+chromadb
+transformers
+torch
+langchain-text-splitters
+underthesea
+dateparser

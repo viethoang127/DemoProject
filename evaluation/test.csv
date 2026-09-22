@@ -1,0 +1,12 @@
+﻿id,query,label
+1,"từ 21/9 đến 30/9 ven biển bắc bộ giai đoạn triều trung bình có xu hướng tăng đến 22/9 rồi giảm",REAL
+2,"ven biển trung trung bộ nước dâng 3m ",FAKE
+3,"ven biển bắc bộ nước dâng 0.1 đến 0.2m",REAL
+4,"16/6 nước dâng ở vịnh bắc bộ dao động 0.1m",REAL
+5,"trong 6 giờ tới gia lai không hề có nguy cơ sạt lở ",FAKE
+6,"trong 6 giờ tới nam định khả năng cao có sạt lở",UNCERTAIN
+7,"trong 6 giờ tới quảng ngãi có khả năng sạt lở",REAL
+8,"hôm nay lũ ở đồng nai tại trạm tà lài ở trên mức báo động 2",REAL
+9,"hôm nay mực nước các sông ở huế đều ở mức báo động 0",FAKE
+10,"23/9 sông ở lâm đồng có khả năng xuất hiện 1 đợt lũ",REAL
+11,"biển quảng ninh ngày 24/9 có sóng cao 3m",UNCERTAIN
