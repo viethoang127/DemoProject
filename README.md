@@ -13,8 +13,8 @@ Hệ thống kiểm tra tính xác thực của thông tin thời tiết bằng 
 2. Làm sạch văn bản và chuẩn hóa tiếng Việt.
 3. Chia dữ liệu thành các chunk nhỏ để lưu trữ.
 4. Trích xuất thời gian, địa điểm và các biểu thức thời gian từ truy vấn.
-5. Tìm kiếm evidence tương đồng trong ChromaDB.
-6. Dùng LLM để đánh giá; nếu không khả dụng thì dùng fallback rule-based.
+5. Tìm kiếm văn bản tương đồng trong ChromaDB.
+6. Dùng LLM để đánh giá.
 
 # Công dụng của từng thư mục
 
@@ -23,7 +23,7 @@ Hệ thống kiểm tra tính xác thực của thông tin thời tiết bằng 
 - chunking: Chia bài viết thành các đoạn nhỏ để dễ tìm kiếm và xử lý.
 - model_embedding: Chuyển văn bản thành vector và tìm kiếm nội dung tương đồng.
 - query_parser: Phân tích câu hỏi, xác định thời gian, địa điểm và nội dung chính.
-- LLM_reasoning: Dùng LLM để đánh giá evidence và đưa ra kết luận.
+- LLM_reasoning: Dùng LLM để đánh giá và đưa ra kết luận.
 - services: Điều phối quá trình crawl, xử lý và đồng bộ dữ liệu.
 - storage: Khởi tạo database và quản lý dữ liệu trong SQLite.
 - temporal: Nhận diện ngày tháng, khoảng thời gian và các mốc thời gian trong văn bản.
