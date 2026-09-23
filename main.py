@@ -31,7 +31,7 @@ def main():
             if query.lower() == 'exit':
                 break
 
-            # ========== STEP 1: Parse Query ==========
+            
             print("\n[STEP 1] Phân tích temporal expression trong câu hỏi...", flush=True)
             parsed_query = query_parser.parse(query)
             time_info = parsed_query.get('time_info', {})
@@ -75,7 +75,6 @@ def main():
             try:
                 print("\n[STEP 4] LLM suy luận với temporal context...", flush=True)
                 detection = llm_reasoning(llm, query, results, parsed_query_info=parsed_query)
-                # Format output
                 output = f"""
 
                 KẾT LUẬN: {detection.get('label', 'UNCERTAIN'):12} 
