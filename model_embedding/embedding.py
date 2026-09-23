@@ -55,7 +55,6 @@ class WeatherVectorDB:
 
     @staticmethod
     def _date_parts(value: str):
-        """Extract day/month/year values from dates stored in chunk metadata."""
         matches = re.findall(
             r"(?<!\d)(\d{1,2})[/-](\d{1,2})(?:[/-](\d{2,4}))?(?!\d)",
             value or "",
@@ -160,19 +159,6 @@ class WeatherVectorDB:
         return False
     
     def add_article(self, article_id: str, text_chunks: list, metadatas: list):
-        """
-        Lưu các chunks bài báo cùng metadata chuẩn hóa.
-        
-        metadatas kỳ vọng dạng List[Dict] ứng với từng chunk:
-        {
-            "article_id": str,
-            "published_at": "YYYY-MM-DD HH:MM:SS",
-            "event_date": "YYYY-MM-DD",  # Ngày diễn ra sự kiện thời tiết
-            "timestamp": int,            # Unix timestamp của published_at
-            "location": str,             # Ví dụ: "Hà Nội" hoặc "Hà Nội,Sapa"
-            "source": str                # Tên nguồn báo
-        }
-        """
         if not text_chunks:
             return
         
@@ -196,9 +182,7 @@ class WeatherVectorDB:
         target_locations: list = None,
         target_date: str = None
     ) -> list:
-        """
-        Tìm kiếm chunks liên quan hỗ trợ Dynamic Metadata Filtering.
-        """
+        
         if target_date and not start_date and not end_date:
             start_date = target_date
             end_date = target_date
@@ -267,7 +251,6 @@ class WeatherVectorDB:
         return results
 
     def clear_expired_data(self):
-        """Dọn dẹp các bản tin quá cũ dựa theo timestamp đăng bài"""
         print("🧹 [HỆ THỐNG DỌN DẸP] Đang quét dữ liệu hết hạn...")
         forty_eight_hours_ago = int(datetime.now().timestamp()) - (VECTOR_DB_TIME_WINDOW_DAYS * 24 * 3600)
         self.collection.delete(
