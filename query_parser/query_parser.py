@@ -76,7 +76,6 @@ class QueryParser():
         return re.sub(r'\s+', ' ', text).strip()
 
     def extract_location_and_entities(self, query: str) -> Dict[str, List[str]]:
-        """Dùng NER để bóc tách địa điểm (Location) và sự kiện (Event/Weather)"""
         text_lower = query.lower().strip()
         normalized_text = self._normalize_for_match(query)
         locations = []
@@ -127,7 +126,6 @@ class QueryParser():
         start_date, end_date, expr_matched = self.extract_time_range(query)
         ner_res = self.extract_location_and_entities(query)
 
-        # Mặc định nếu không tìm thấy thời gian -> Ngày hiện tại
         if not start_date:
             today_str = datetime.now().strftime("%Y-%m-%d")
             start_date, end_date = today_str, today_str
