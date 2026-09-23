@@ -155,15 +155,6 @@ def build_reasoning_prompt(
     ngày bắt đầu và ngày kết thúc. Vì vậy, ngày 22/9 nằm trong khoảng
     21/9 đến 23/9.
 
-    2a. Khi query hỏi "đêm 22/9 khu vực Bắc Bộ có mưa" và evidence
-    ghi "từ đêm 21/9 đến ngày 23/9, khu vực Bắc Bộ và Bắc Trung Bộ:
-    đêm có mưa rào", hãy coi evidence là xác nhận trực tiếp và chọn
-    REAL. "Có mưa" được bao hàm bởi "có mưa rào".
-
-    2b. Nếu query là "vùng biển Đà Nẵng không có mưa" nhưng evidence
-    ghi "vùng biển Đà Nẵng có mưa rào/áp thấp nhiệt đới" thì phải chọn
-    FAKE. Phủ định mưa + evidence rõ ràng có mưa = mâu thuẫn trực tiếp.
-
     3. Nếu evidence không chứa temporal expression thì chỉ dùng
     fetched_at fallback như ngày tham chiếu gần đúng, không gọi đó là
     thời gian sự kiện chắc chắn.
@@ -242,58 +233,7 @@ def parse_json_safe(text, results):
     }
 
 
-def rule_based_negation_check(query: str, results: list) -> dict | None:
-    """Nếu query phủ định thời tiết nhưng evidence lại cho thấy có mưa/bão thì ưu tiên FAKE."""
-    q = query.lower()
-    q_norm = re.sub(r'\s+', ' ', q)
-    q_norm = q_norm.replace('đ', 'd').replace('à', 'a').replace('ã', 'a').replace('á', 'a').replace('ạ', 'a')
-    q_norm = q_norm.replace('è', 'e').replace('é', 'e').replace('ẽ', 'e').replace('ẹ', 'e')
-    q_norm = q_norm.replace('ì', 'i').replace('í', 'i').replace('ĩ', 'i').replace('ị', 'i')
-    q_norm = q_norm.replace('ò', 'o').replace('ó', 'o').replace('õ', 'o').replace('ọ', 'o')
-    q_norm = q_norm.replace('ù', 'u').replace('ú', 'u').replace('ũ', 'u').replace('ụ', 'u')
-    q_norm = q_norm.replace('ỳ', 'y').replace('ý', 'y').replace('ỹ', 'y').replace('ỵ', 'y')
-    q_norm = q_norm.replace('â', 'a').replace('ê', 'e').replace('ô', 'o').replace('ă', 'a').replace('ơ', 'o').replace('ư', 'u')
-
-    negation_patterns = [
-        "khong co mua", "ko co mua", "khong mua", "ko mua", "ko he co mua",
-        "khong he co mua", "chua co mua", "khong co mua rao", "ko mua rao",
-        "khong mua rao", "ko he co mua rao", "khong he co mua rao"
-    ]
-    if not any(p in q_norm for p in negation_patterns):
-        return None
-
-    evidence_text = " ".join((r.get("text", "") or "").lower() for r in results)
-    evidence_norm = re.sub(r'\s+', ' ', evidence_text)
-    evidence_norm = evidence_norm.replace('đ', 'd').replace('à', 'a').replace('ã', 'a').replace('á', 'a').replace('ạ', 'a')
-    evidence_norm = evidence_norm.replace('è', 'e').replace('é', 'e').replace('ẽ', 'e').replace('ẹ', 'e')
-    evidence_norm = evidence_norm.replace('ì', 'i').replace('í', 'i').replace('ĩ', 'i').replace('ị', 'i')
-    evidence_norm = evidence_norm.replace('ò', 'o').replace('ó', 'o').replace('õ', 'o').replace('ọ', 'o')
-    evidence_norm = evidence_norm.replace('ù', 'u').replace('ú', 'u').replace('ũ', 'u').replace('ụ', 'u')
-    evidence_norm = evidence_norm.replace('ỳ', 'y').replace('ý', 'y').replace('ỹ', 'y').replace('ỵ', 'y')
-    evidence_norm = evidence_norm.replace('â', 'a').replace('ê', 'e').replace('ô', 'o').replace('ă', 'a').replace('ơ', 'o').replace('ư', 'u')
-
-    positive_weather_terms = [
-        "mua", "mua rao", "mua lon", "mua vua", "mua to", "bao",
-        "ap thap nhiet doi", "dong", "giong", "co mua"
-    ]
-
-    if not any(term in evidence_norm for term in positive_weather_terms):
-        return None
-
-    best_match = max(results, key=lambda r: r.get("score", 0), default={})
-    return {
-        "label": "FAKE",
-        "reason": "Query phủ định hiện tượng mưa nhưng evidence cùng thời gian/địa điểm cho thấy có mưa, bão hoặc mưa rào.",
-        "source": best_match.get("id", "unknown"),
-        "score": best_match.get("score", 0)
-    }
-
-
 def llm_reasoning(llm_client: LLMClient, query: str, results: list, parsed_query_info=None) -> dict:
-        quick_result = rule_based_negation_check(query, results)
-        if quick_result is not None:
-            return quick_result
-
         evidence = []
         for i, r in enumerate(results, 1):
             evidence.append({
