@@ -15,7 +15,6 @@ temporal_detector = TemporalDetector()
 
 
 def canonical_event_date(temporal_expressions: str, published_time: str):
-    """Return an ISO date for explicit content dates, otherwise publication date."""
     explicit_match = re.search(
         r"(?:ngày\s+)?(\d{1,2})[/-](\d{1,2})(?:[/-](\d{2,4}))?",
         temporal_expressions or "",
