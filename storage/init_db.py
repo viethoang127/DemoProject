@@ -21,7 +21,6 @@ def init_sqlite_db():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS processed_articles (
         article_id TEXT PRIMARY KEY,
-        url TEXT NOT NULL,
         fetched_at TEXT
     );
     """)
